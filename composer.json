@@ -1,0 +1,25 @@
+{
+  "name": "asgorobets/soap-extension",
+  "type": "behat-extension",
+  "description": "Soap extension for Behat",
+  "keywords": ["services", "test", "soap"],
+  "homepage": "https://github.com/asgorobets/soap-extension",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Alexei Gorobet",
+      "email": "asgorobets@gmail.com"
+    }
+  ],
+
+  "require": {
+    "php": ">=5.4",
+    "behat/behat": "~3.0"
+  },
+
+  "autoload": {
+    "psr-4": {
+      "Behat\\SoapExtension\\": "src/"
+    }
+  }
+}
