@@ -38,6 +38,12 @@ class SoapContext implements Context
 
     private $response;
 
+    private $rawResponse;
+
+    private $namespaces = array();
+
+    private $savedValue;
+
     /**
      * Sets the WSDL for the next SOAP request.
      *
@@ -104,7 +110,7 @@ class SoapContext implements Context
 
     /**
      * Send SOAP request with raw body.
-
+     *
      * @Given I call SOAP with raw body:
      */
     public function iSendRequestBody(PyStringNode $body)
@@ -131,7 +137,7 @@ class SoapContext implements Context
     {
         // TODO: Get default options from extension config.
         $options = $this->options += array(
-          'trace' => 1,
+          'trace' => 1, // Important for raw response steps.
           'exceptions' => TRUE,
           'cache_wsdl' => WSDL_CACHE_NONE,
         );
@@ -139,21 +145,167 @@ class SoapContext implements Context
         $this->client = new SoapClient($this->wsdl, $this->options);
         $response = $this->client->__soapCall($function, $this->arguments);
         $this->setResponse($response);
+        $this->setRawResponse($this->client->__getLastResponse());
     }
 
     /**
-     * @Given I should see :text text in SOAP response :property property
+     * @Given I register the following XPATH namespaces:
      */
-    public function iShouldSeeSoapResponsePropertyIncludes($text, $property)
-    {
-        $response = $this->getResponse();
+    public function iRegisterXpathNamespaces(TableNode $namespaces) {
+        $this->setNamespaces($namespaces->getRowsHash());
+    }
 
-        // TODO: Extract this as a helper to be reused.
+    /**
+     * @Given I should see SOAP response property :property equals to :text
+     */
+    public function iShouldSeeSoapResponsePropertyEquals($text, $property)
+    {
+        $value = $this->extractResponseProperty($property);
+        Assertions::assertEquals($text, $value);
+    }
+
+    /**
+     * @Given I should see SOAP response property :property is not :text
+     */
+    public function iShouldSeeSoapResponsePropertyNotEquals($text, $property)
+    {
+        $value = $this->extractResponseProperty($property);
+        Assertions::assertNotEquals($text, $value);
+    }
+
+    /**
+     * @Given I should see SOAP response property :property contains :text
+     */
+    public function iShouldSeeSoapResponsePropertyContains($text, $property)
+    {
+        $value = $this->extractResponseProperty($property);
+        Assertions::assertContains($text, $value);
+    }
+
+    /**
+     * @Given I should see SOAP response property :property doesn't contain :text
+     */
+    public function iShouldSeeSoapResponsePropertyNotContains($text, $property)
+    {
+        $value = $this->extractResponseProperty($property);
+        Assertions::assertNotContains($text, $value);
+    }
+
+    /**
+     * @Then I should see SOAP response property :property matching pattern :pattern
+     */
+    public function iShouldSeeSoapResponsePropertyMatches($pattern, $property)
+    {
+        $value = $this->extractResponseProperty($property);
+        Assertions::assertRegExp($pattern, $value);
+    }
+
+    /**
+     * @Then I should see that SOAP Response matches XPATH :xpath
+     */
+    public function iShouldSeeThatSOAPResponseMatchesXpath($xpath) {
+        Assertions::assertTrue($this->extractResponseValueMatchingXPATH($xpath) !== FALSE, "Couldn't find node matching provided XPATH: ");
+    }
+
+    /**
+     * @Given I am working with SOAP response property :property
+     */
+    public function iWorkWithResponseProperty($property) {
+        $this->savedValue = $this->extractResponseProperty($property);
+    }
+
+    /**
+     * @Given I am working with SOAP element matching XPATH :xpath
+     */
+    public function iWorkWithElementTextMatchingXPATH($xpath) {
+        $this->savedValue = $this->extractResponseValueMatchingXPATH($xpath);
+    }
+
+    /**
+     * @Then saved SOAP value equals to :text
+     */
+    public function savedValueEquals($text) {
+        Assertions::assertEquals($text, $this->savedValue);
+    }
+
+    /**
+     * @Then saved SOAP value is not equal to :text
+     */
+    public function savedValueNotEquals($text) {
+        Assertions::assertNotEquals($text, $this->savedValue);
+    }
+
+    /**
+     * @Then saved SOAP value contains :text
+     */
+    public function savedValueContains($text) {
+        Assertions::assertContains($text, $this->savedValue);
+    }
+
+    /**
+     * @Then saved SOAP value doesn't contain :text
+     */
+    public function savedValueNotContains($text) {
+        Assertions::assertNotContains($text, $this->savedValue);
+    }
+
+    /**
+     * @Then saved SOAP value matches :pattern
+     */
+    public function savedValueMatchesRegExp($pattern) {
+        Assertions::assertRegExp($pattern, $this->savedValue);
+    }
+
+    /**
+     * @Then saved SOAP value doesn't match :pattern
+     */
+    public function savedValueNotMatchesRegExp($pattern) {
+        Assertions::assertNotRegExp($pattern, $this->savedValue);
+    }
+
+    /**
+     * Extracts first value matching provided XPATH expression.
+     * @param $xpath
+     *   XPATH expression used to extract value from $this->rawResponse
+     * @return \DOMNode|false
+     *   Return DOMNode instanse of a matched element, or FALSE if none was found.
+     *
+     */
+    private function extractResponseValueMatchingXPATH($xpath) {
+        $clean_xml = $this->getRawResponse();
+
+        // @todo: Allow users to ignore namespaces via config or steps.
+        // @example: $clean_xml = str_replace('xmlns=', 'ns=', $clean_xml);
+
+        $dom = new \DOMDocument();
+        $dom->loadXML($clean_xml);
+        $dom_xpath = new \DOMXpath($dom);
+
+        // @todo Allow configurable namespaces from extension config.
+        foreach ($this->getNamespaces() as $prefix => $namespaceURI) {
+            $dom_xpath->registerNamespace($prefix, $namespaceURI);
+        }
+
+        $node_list = $dom_xpath->query($xpath);
+
+        if ($node_list->length > 0) {
+            return $dom_xpath->query($xpath)->item(0)->nodeValue;
+        }
+        else {
+            return FALSE;
+        }
+    }
+
+    /**
+     * Helper to extract a property value from the response.
+     * @param $property
+     * @return mixed
+     */
+    private function extractResponseProperty($property) {
+        $response = $this->getResponse();
         $response = self::object_to_array($response);
         $parents = explode('][', $property);
-        $value = self::drupal_array_get_nested_value($response, $parents);
-
-        Assertions::assertContains($text, $value);
+        return self::drupal_array_get_nested_value($response, $parents);
     }
 
     /**
@@ -273,5 +425,47 @@ class SoapContext implements Context
      */
     public function setResponse($response) {
         $this->response = $response;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRawResponse() {
+        return $this->rawResponse;
+    }
+
+    /**
+     * @param mixed $rawResponse
+     */
+    public function setRawResponse($rawResponse) {
+        $this->rawResponse = $rawResponse;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNamespaces() {
+        return $this->namespaces;
+    }
+
+    /**
+     * @param mixed $namespaces
+     */
+    public function setNamespaces($namespaces) {
+        $this->namespaces = $namespaces;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSavedValue() {
+        return $this->savedValue;
+    }
+
+    /**
+     * @param mixed $savedValue
+     */
+    public function setSavedValue($savedValue) {
+        $this->savedValue = $savedValue;
     }
 }
