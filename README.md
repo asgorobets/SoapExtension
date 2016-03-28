@@ -7,10 +7,6 @@ SoapExtension is a Behat extension designed to test various SOAP APIs using Beha
 [![Latest Unstable Version](https://poser.pugx.org/behat/soap-extension/v/unstable)](https://packagist.org/packages/behat/soap-extension)
 [![License](https://poser.pugx.org/behat/soap-extension/license)](https://packagist.org/packages/behat/soap-extension)
 
-## Contributions
-
-Feel free to provide feedback in issue queue and contributions are much welcome.
-
 ## Installation
 
 - `curl -sS https://getcomposer.org/installer | php`
@@ -26,13 +22,17 @@ Feel free to provide feedback in issue queue and contributions are much welcome.
 }
 ```
 - `composer install`
-- Enable `SoapExtension` in [behat.yml](docs/behat.yml#L6):
+- Enable `SoapExtension` in [behat.yml](docs/behat.yml#L6-L10)
 
 ## Documentation
 
 - [Example feature](docs/features/weather_ws.feature)
 
-Docs coming soon... in the meantime, run `bin/behat -dl` for a list of available steps.
+[Docs coming soon...](docs/) In the meantime, run `bin/behat -dl` for a list of available steps.
+
+## Contributions
+
+Feel free to provide feedback in issue queue and contributions are much welcome.
 
 ## Authors
 
