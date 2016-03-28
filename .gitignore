@@ -1,0 +1,8 @@
+# Ignore files which names start from dot.
+.*
+
+# Ignore files with extensions.
+*.lock
+
+# Ignore directories.
+vendor/

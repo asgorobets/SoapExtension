@@ -1,0 +1,10 @@
+default:
+  suites:
+    default:
+      contexts: {}
+  extensions:
+    Behat\SoapExtension:
+      # An associative array as second argument for \SoapClient::__soapCall().
+      options: {}
+      # An associative array as parameters for \DOMXpath::registerNamespace().
+      namespaces: {}
