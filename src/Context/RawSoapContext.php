@@ -11,7 +11,7 @@ use Behat\SoapExtension\Utils\SoapManager;
  *
  * @package Behat\SoapExtension\Context
  */
-class RawSoapContext extends \PHPUnit_Framework_Assert implements SoapContextInterface
+class RawSoapContext implements SoapContextInterface
 {
     use SoapManager {
         setWSDL as soapWSDL;
@@ -47,19 +47,19 @@ class RawSoapContext extends \PHPUnit_Framework_Assert implements SoapContextInt
 
     /**
      * {@inheritdoc}
+     *
+     * @see SoapManager::setOptions()
+     * @see SoapManager::setNamespaces()
      */
     protected function setWSDL($wsdl)
     {
         // Initialize SOAP manager with predefined values from configuration.
-        foreach (['option', 'namespace'] as $param) {
-            $plural = $param . 's';
+        foreach (['options', 'namespaces'] as $param) {
+            $method = 'set' . ucfirst($param);
 
-            // Execute: "unsetOptions" and "unsetNamespaces".
-            call_user_func([$this, 'unset' . ucfirst($plural)]);
-
-            foreach ($this->getSoapParameter($plural) as $key => $value) {
-                // Execute: "setOption" and "setNamespace".
-                call_user_func([$this, 'set' . ucfirst($param)], $key, $value);
+            // Unset all options and namespaces and initialize them from config.
+            foreach ([null, $this->getSoapParameter($param)] as $value) {
+                call_user_func([$this, $method], $value);
             }
         }
 

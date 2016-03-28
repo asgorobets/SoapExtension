@@ -2,6 +2,11 @@
 
 SoapExtension is a Behat extension designed to test various SOAP APIs using Behat framework and it's powerful tooling. Soap Extension currently supports only PHP's native SoapClient as transport and there are no plans to add other clients support at this time. Full project roadmap will come later.
 
+[![Latest Stable Version](https://poser.pugx.org/behat/soap-extension/v/stable)](https://packagist.org/packages/behat/soap-extension)
+[![Total Downloads](https://poser.pugx.org/behat/soap-extension/downloads)](https://packagist.org/packages/behat/soap-extension)
+[![Latest Unstable Version](https://poser.pugx.org/behat/soap-extension/v/unstable)](https://packagist.org/packages/behat/soap-extension)
+[![License](https://poser.pugx.org/behat/soap-extension/license)](https://packagist.org/packages/behat/soap-extension)
+
 ## Contributions
 
 Feel free to provide feedback in issue queue and contributions are much welcome.
@@ -13,35 +18,27 @@ Feel free to provide feedback in issue queue and contributions are much welcome.
 ```json
 {
   "require": {
-    "asgorobets/soap-extension": "dev-master"
+    "behat/soap-extension": "dev-master"
   },
   "config": {
     "bin-dir": "bin"
   }
 }
 ```
-- Run bin/behat --init and/or configure `behat.yml` to include SoapContext and enable SoapExtension:
-```
-default:
-  suites:
-    default:
-      contexts:
-        - FeatureContext: ~
-        - Behat\SoapExtension\Context\SoapContext: ~
-  extensions:
-    Behat\SoapExtension: ~
-```
+- `composer install`
+- Enable `SoapExtension` in [behat.yml](docs/behat.yml#L6):
 
 ## Documentation
 
-- [Example feature](examples/weather_ws.feature)
+- [Example feature](docs/features/weather_ws.feature)
 
-Docs coming soon... in the meantime, run bin/behat -dl for a list of available steps
+Docs coming soon... in the meantime, run `bin/behat -dl` for a list of available steps.
 
 ## Authors
 
 - [Alexei Gorobets (asgorobets)](https://github.com/asgorobets)
+- [Sergii Bondarenko (BR0kEN-)](https://github.com/BR0kEN-)
 
 ## Supporting organizations
 
-Thanks to [FFW Agency](http://www.ffwagency.com/) for supporting this contribution
+Thanks to [FFW Agency](http://www.ffwagency.com/) for supporting this contribution.

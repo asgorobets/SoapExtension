@@ -7,6 +7,7 @@ namespace Behat\SoapExtension\Context;
 use Symfony\Component\Yaml\Yaml;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
+use PHPUnit_Framework_Assert as Assertions;
 
 /**
  * Class SoapContext.
@@ -105,7 +106,7 @@ class SoapContext extends RawSoapContext
      */
     public function iShouldSeeSoapResponsePropertyEquals($text, $property)
     {
-        static::assertEquals($text, $this->extractResponseProperty($property));
+        Assertions::assertEquals($text, $this->extractResponseProperty($property));
     }
 
     /**
@@ -113,7 +114,7 @@ class SoapContext extends RawSoapContext
      */
     public function iShouldSeeSoapResponsePropertyNotEquals($text, $property)
     {
-        static::assertNotEquals($text, $this->extractResponseProperty($property));
+        Assertions::assertNotEquals($text, $this->extractResponseProperty($property));
     }
 
     /**
@@ -121,7 +122,7 @@ class SoapContext extends RawSoapContext
      */
     public function iShouldSeeSoapResponsePropertyContains($text, $property)
     {
-        static::assertContains($text, $this->extractResponseProperty($property));
+        Assertions::assertContains($text, $this->extractResponseProperty($property));
     }
 
     /**
@@ -129,7 +130,7 @@ class SoapContext extends RawSoapContext
      */
     public function iShouldSeeSoapResponsePropertyNotContains($text, $property)
     {
-        static::assertNotContains($text, $this->extractResponseProperty($property));
+        Assertions::assertNotContains($text, $this->extractResponseProperty($property));
     }
 
     /**
@@ -137,7 +138,7 @@ class SoapContext extends RawSoapContext
      */
     public function iShouldSeeSoapResponsePropertyMatches($pattern, $property)
     {
-        static::assertRegExp($pattern, $this->extractResponseProperty($property));
+        Assertions::assertRegExp($pattern, $this->extractResponseProperty($property));
     }
 
     /**
@@ -145,7 +146,7 @@ class SoapContext extends RawSoapContext
      */
     public function iShouldSeeThatSOAPResponseMatchesXpath($xpath)
     {
-        static::assertTrue(
+        Assertions::assertTrue(
             $this->extractResponseValueMatchingXPATH($xpath) !== false,
             "Couldn't find node matching provided XPATH: "
         );
@@ -172,7 +173,7 @@ class SoapContext extends RawSoapContext
      */
     public function savedValueEquals($text)
     {
-        static::assertEquals($text, $this->value);
+        Assertions::assertEquals($text, $this->value);
     }
 
     /**
@@ -180,7 +181,7 @@ class SoapContext extends RawSoapContext
      */
     public function savedValueNotEquals($text)
     {
-        static::assertNotEquals($text, $this->value);
+        Assertions::assertNotEquals($text, $this->value);
     }
 
     /**
@@ -188,7 +189,7 @@ class SoapContext extends RawSoapContext
      */
     public function savedValueContains($text)
     {
-        static::assertContains($text, $this->value);
+        Assertions::assertContains($text, $this->value);
     }
 
     /**
@@ -196,7 +197,7 @@ class SoapContext extends RawSoapContext
      */
     public function savedValueNotContains($text)
     {
-        static::assertNotContains($text, $this->value);
+        Assertions::assertNotContains($text, $this->value);
     }
 
     /**
@@ -204,7 +205,7 @@ class SoapContext extends RawSoapContext
      */
     public function savedValueMatchesRegExp($pattern)
     {
-        static::assertRegExp($pattern, $this->value);
+        Assertions::assertRegExp($pattern, $this->value);
     }
 
     /**
@@ -212,6 +213,6 @@ class SoapContext extends RawSoapContext
      */
     public function savedValueNotMatchesRegExp($pattern)
     {
-        static::assertNotRegExp($pattern, $this->value);
+        Assertions::assertNotRegExp($pattern, $this->value);
     }
 }

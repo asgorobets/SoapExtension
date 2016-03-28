@@ -114,6 +114,20 @@ trait SoapManager
     }
 
     /**
+     * @param array $options
+     */
+    protected function setOptions(array $options = null)
+    {
+        if (null === $options) {
+            $this->options = [];
+        } else {
+            foreach ($options as $option => $value) {
+                $this->setOption($option, $value);
+            }
+        }
+    }
+
+    /**
      * @param string $option
      * @param mixed $value
      */
@@ -123,11 +137,17 @@ trait SoapManager
     }
 
     /**
-     * Reset all request options.
+     * @param array $namespaces
      */
-    protected function unsetOptions()
+    protected function setNamespaces(array $namespaces = null)
     {
-        $this->options = [];
+        if (null === $namespaces) {
+            $this->namespaces = [];
+        } else {
+            foreach ($namespaces as $prefix => $uri) {
+                $this->setNamespace($prefix, $uri);
+            }
+        }
     }
 
     /**
@@ -137,13 +157,5 @@ trait SoapManager
     protected function setNamespace($prefix, $uri)
     {
         $this->namespaces[$prefix] = $uri;
-    }
-
-    /**
-     * Reset all namespaces.
-     */
-    protected function unsetNamespaces()
-    {
-        $this->namespaces = [];
     }
 }
