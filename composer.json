@@ -1,5 +1,5 @@
 {
-  "name": "asgorobets/soap-extension",
+  "name": "behat/soap-extension",
   "type": "behat-extension",
   "description": "Soap extension for Behat",
   "keywords": ["services", "test", "soap"],
@@ -9,15 +9,17 @@
     {
       "name": "Alexei Gorobet",
       "email": "asgorobets@gmail.com"
+    },
+    {
+      "name": "Sergii Bondarenko",
+      "email": "sb@firstvector.org"
     }
   ],
-
   "require": {
     "php": ">=5.4",
     "behat/behat": "~3.0",
     "phpunit/phpunit": "4 - 5"
   },
-
   "autoload": {
     "psr-4": {
       "Behat\\SoapExtension\\": "src/"
