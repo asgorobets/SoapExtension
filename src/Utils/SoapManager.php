@@ -18,7 +18,7 @@ trait SoapManager
      *
      * @var string $wsdl
      */
-    private $wsdl = '';
+    private $wsdl;
     /**
      * Set of options for SOAP request.
      *
@@ -110,7 +110,15 @@ trait SoapManager
      */
     protected function setWSDL($wsdl)
     {
-        $this->wsdl = $wsdl;
+        // Allow "null" and valid URLs.
+        $isWsdlValid = null === $wsdl || filter_var($wsdl, FILTER_VALIDATE_URL);
+        // Set the URL if it is validated.
+        $this->wsdl = $isWsdlValid ? $wsdl : null;
+
+        // Throw deferred exception when WSDL was reset due to it invalidation.
+        if (!$isWsdlValid) {
+            throw new \InvalidArgumentException(sprintf('You must pass a correct WSDL or null to %s.', __METHOD__));
+        }
     }
 
     /**
