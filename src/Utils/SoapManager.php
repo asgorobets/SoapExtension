@@ -110,7 +110,7 @@ trait SoapManager
      */
     protected function setWSDL($wsdl)
     {
-        $this->wsdl = (string) $wsdl;
+        $this->wsdl = $wsdl;
     }
 
     /**
