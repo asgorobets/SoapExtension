@@ -16,7 +16,7 @@ trait SoapManager
     /**
      * URL of WSDL service to consume.
      *
-     * @var string $wsdl
+     * @var string|null $wsdl
      */
     private $wsdl;
     /**
