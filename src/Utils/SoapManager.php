@@ -45,6 +45,11 @@ trait SoapManager
     private $namespaces = [];
 
     /**
+     * @var \SoapFault|null
+     */
+    private $exception;
+
+    /**
      * Make SOAP call to a function with params.
      *
      * @param string $function
@@ -64,8 +69,12 @@ trait SoapManager
 
         $client = new \SoapClient($this->wsdl, $this->options);
 
-        $this->response = $client->__soapCall($function, $arguments);
-        $this->rawResponse = $client->__getLastResponse();
+        try {
+            $this->response = $client->__soapCall($function, $arguments);
+            $this->rawResponse = $client->__getLastResponse();
+        } catch (\SoapFault $e) {
+            $this->exception = $e;
+        }
     }
 
     /**
@@ -165,5 +174,21 @@ trait SoapManager
     protected function setNamespace($prefix, $uri)
     {
         $this->namespaces[$prefix] = $uri;
+    }
+
+    /**
+     * @return \SoapFault
+     */
+    public function getException()
+    {
+        return $this->exception;
+    }
+
+    /**
+     * @param \SoapFault $exception
+     */
+    public function setException(\SoapFault $exception = null)
+    {
+        $this->exception = $exception;
     }
 }
