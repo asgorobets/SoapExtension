@@ -6,14 +6,11 @@ namespace Behat\SoapExtension\Context;
 
 use Symfony\Component\Yaml\Yaml;
 use PHPUnit_Framework_Assert as Assertions;
-
 // Argument processors.
 use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
-
 // Utils.
 use Behat\SoapExtension\Utils\SoapFaultProcessor;
-
 // Scopes.
 use Behat\Behat\Hook\Scope\BeforeStepScope;
 
