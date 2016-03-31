@@ -118,7 +118,8 @@ class SoapContext extends RawSoapContext
     /**
      * @Then /^I should get SOAP error matching "(.*)"$/
      */
-    public function iShouldGetSoapErrorMatching($error_pattern) {
+    public function iShouldGetSoapErrorMatching($error_pattern)
+    {
         $error = '';
         if ($exception = $this->getException()) {
             $error = $exception->getMessage();
