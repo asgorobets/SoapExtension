@@ -4,6 +4,7 @@
  */
 namespace Behat\SoapExtension\Context;
 
+use Behat\Behat\Hook\Scope\AfterStepScope;
 use Symfony\Component\Yaml\Yaml;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
@@ -92,6 +93,19 @@ class SoapContext extends RawSoapContext
     }
 
     /**
+     * Throw exceptions in case there were any we didn't expect and SoapContext
+     * has an exception saved.
+     *
+     * @AfterStep */
+    public function afterStepThrowExceptions(AfterStepScope $scope)
+    {
+        if (!preg_match('/^I call SOAP/', $scope->getStep()->getText())
+          && $e = $this->getException()) {
+            throw $e;
+        }
+    }
+
+    /**
      * @Given I register the following XPATH namespaces:
      */
     public function iRegisterXpathNamespaces(TableNode $namespaces)
@@ -99,6 +113,18 @@ class SoapContext extends RawSoapContext
         foreach ($namespaces->getRowsHash() as $prefix => $uri) {
             $this->setNamespace($prefix, $uri);
         }
+    }
+
+    /**
+     * @Then /^I should get SOAP error matching "(.*)"$/
+     */
+    public function iShouldGetSoapErrorMatching($error_pattern) {
+        $error = '';
+        if ($exception = $this->getException()) {
+            $error = $exception->getMessage();
+        }
+        Assertions::assertRegExp($error_pattern, $error);
+        $this->setException(null);
     }
 
     /**
