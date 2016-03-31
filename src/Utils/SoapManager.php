@@ -72,8 +72,7 @@ trait SoapManager
         try {
             $this->response = $client->__soapCall($function, $arguments);
             $this->rawResponse = $client->__getLastResponse();
-        }
-        catch (\SoapFault $e) {
+        } catch (\SoapFault $e) {
             $this->exception = $e;
         }
     }
@@ -180,14 +179,16 @@ trait SoapManager
     /**
      * @return \SoapFault
      */
-    public function getException() {
+    public function getException()
+    {
         return $this->exception;
     }
 
     /**
      * @param \SoapFault $exception
      */
-    public function setException(\SoapFault $exception = null) {
+    public function setException(\SoapFault $exception = null)
+    {
         $this->exception = $exception;
     }
 }
