@@ -17,7 +17,8 @@
   ],
   "require": {
     "php": ">=5.4",
-    "behat/behat": "~3.0",
+    "behat/behat": "3.*",
+    "behat/environment-loader": "dev-master",
     "phpunit/phpunit": "4 - 5"
   },
   "autoload": {
