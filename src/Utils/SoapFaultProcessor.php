@@ -22,7 +22,7 @@ class SoapFaultProcessor
      *
      * @var string[]
      */
-    private $messages = [];
+    private $errors = [];
     /**
      * Expected error code.
      *
@@ -70,8 +70,8 @@ class SoapFaultProcessor
           ->processMessage()
           ->processCondition();
 
-        if (!empty($this->messages)) {
-            throw new \RuntimeException(implode("\n", $this->messages));
+        if (!empty($this->errors)) {
+            throw new \RuntimeException(implode("\n", $this->errors));
         }
     }
 
@@ -86,7 +86,7 @@ class SoapFaultProcessor
             $value = $this->exception->getCode();
 
             if ($value !== (int) $this->code) {
-                $this->messages[] = sprintf('Exit code "%s" does not match with expected.', $value);
+                $this->errors[] = sprintf('Exit code "%s" does not match with expected.', $value);
             }
         }
 
@@ -104,7 +104,7 @@ class SoapFaultProcessor
             $value = $this->exception->getMessage();
 
             if (strpos($value, trim($this->message)) === false) {
-                $this->messages[] = sprintf('Exception message "%s" does not contain expected value.', $value);
+                $this->errors[] = sprintf('Exception message "%s" does not contain expected value.', $value);
             }
         }
 
@@ -117,12 +117,12 @@ class SoapFaultProcessor
     private function processCondition()
     {
         if (!empty($this->condition)) {
-            $exceptions = count($this->messages);
+            $errors = count($this->errors);
 
             // - At least one message needed to be able to choose one from and meet "or" condition.
-            // - Two messages are needed to be able to meet "and" condition.
-            if (('or' === $this->condition && $exceptions < 2) || ('and' === $this->condition && $exceptions < 1)) {
-                $this->messages = [];
+            // - No failed assertions should be present in order to meet "and" condition.
+            if (('or' === $this->condition && $errors < 2) || ('and' === $this->condition && $errors < 1)) {
+                $this->errors = [];
             }
         }
     }

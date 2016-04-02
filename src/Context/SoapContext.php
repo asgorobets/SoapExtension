@@ -108,7 +108,7 @@ class SoapContext extends RawSoapContext
     }
 
     /**
-     * @Given /^(?:|I )expect SOAP exception(?:| with code "(\d+)")(?:|( and| or)? with message "([^"]+?)")$/
+     * @Then /^(?:|I )expect SOAP exception(?:| with code "(\d+)")(?:|( and| or)? with message "([^"]+?)")$/
      */
     public function expectException($code = null, $condition = null, $message = null)
     {
@@ -119,7 +119,7 @@ class SoapContext extends RawSoapContext
 
         new SoapFaultProcessor($this->fault, $code, $message, $condition);
 
-        // If processor was not thrown an exception then we shouldn't too.
+        // If processor didn't throw an exception, then we shouldn't too.
         $this->fault = null;
     }
 
@@ -241,7 +241,7 @@ class SoapContext extends RawSoapContext
     /**
      * @BeforeStep
      */
-    public function beforeStep(BeforeStepScope $scope)
+    public function beforeStepCheckForException(BeforeStepScope $scope)
     {
         // Check for SOAP exception from previously executed step.
         $this->fault = $this->getException();
