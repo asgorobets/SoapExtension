@@ -4,14 +4,11 @@
  */
 namespace Behat\SoapExtension\ServiceContainer;
 
+use Behat\EnvironmentLoader;
 use Behat\Testwork\ServiceContainer\Extension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
-use Behat\Testwork\ServiceContainer\ServiceProcessor;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
-use Behat\Behat\Context\ServiceContainer\ContextExtension;
-use Behat\Testwork\Environment\ServiceContainer\EnvironmentExtension;
 
 /**
  * Class SoapExtension.
@@ -20,27 +17,6 @@ use Behat\Testwork\Environment\ServiceContainer\EnvironmentExtension;
  */
 class SoapExtension implements Extension
 {
-    /**
-     * @var ServiceProcessor
-     */
-    private $processor;
-    /**
-     * Extension namespace.
-     *
-     * @var string
-     */
-    private $namespace = '';
-
-    /**
-     * @param ServiceProcessor $processor
-     */
-    public function __construct(ServiceProcessor $processor = null)
-    {
-        $this->processor = $processor ?: new ServiceProcessor();
-        // Remove "ServiceContainer" from the namespace.
-        $this->namespace = implode('\\', array_slice(explode('\\', __NAMESPACE__), 0, -1));
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -61,7 +37,8 @@ class SoapExtension implements Extension
      */
     public function load(ContainerBuilder $container, array $config)
     {
-        $this->setDefinition($container, 'SoapContextInitializer', ContextExtension::INITIALIZER_TAG, [$config]);
+        $loader = new EnvironmentLoader($this, $container, $config);
+        $loader->load();
     }
 
     /**
@@ -69,9 +46,6 @@ class SoapExtension implements Extension
      */
     public function process(ContainerBuilder $container)
     {
-        $this->setDefinition($container, 'SoapContextReader', EnvironmentExtension::READER_TAG . '.context', [
-          $this->processor->findAndSortTaggedServices($container, ContextExtension::READER_TAG),
-        ]);
     }
 
     /**
@@ -89,24 +63,5 @@ class SoapExtension implements Extension
         }
 
         $config->end();
-    }
-
-    /**
-     * Add definition to DI container.
-     *
-     * @param ContainerBuilder $container
-     *   DI container.
-     * @param string $class
-     *   Class name (in SoapExtension namespace).
-     * @param string $id
-     *   Definition ID.
-     * @param array $arguments
-     *   Definition arguments.
-     */
-    private function setDefinition(ContainerBuilder $container, $class, $id, array $arguments = [])
-    {
-        $definition = new Definition("$this->namespace\\Context\\$class", $arguments);
-        $definition->addTag($id, ['priority' => 0]);
-        $container->setDefinition($id, $definition);
     }
 }
