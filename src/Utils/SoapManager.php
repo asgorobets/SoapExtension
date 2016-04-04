@@ -30,7 +30,7 @@ trait SoapManager
      *
      * @var mixed
      */
-    private $response;
+    private $response = [];
     /**
      * Last SOAP response.
      *
@@ -43,9 +43,17 @@ trait SoapManager
      * @var string[]
      */
     private $namespaces = [];
+    /**
+     * Latest exception thrown out during SOAP call.
+     *
+     * @var null|\SoapFault
+     */
+    private $exception;
 
     /**
      * Make SOAP call to a function with params.
+     *
+     * @link http://php.net/manual/en/soapclient.getlastrequest.php#example-5896
      *
      * @param string $function
      *   SOAP function name to execute. Use MethodNameIsIgnored if function name is in the XML body.
@@ -62,10 +70,14 @@ trait SoapManager
             'cache_wsdl' => WSDL_CACHE_NONE,
         ];
 
-        $client = new \SoapClient($this->wsdl, $this->options);
+        try {
+            $client = new \SoapClient($this->wsdl, $this->options);
 
-        $this->response = $client->__soapCall($function, $arguments);
-        $this->rawResponse = $client->__getLastResponse();
+            $this->response = $client->__soapCall($function, $arguments);
+            $this->rawResponse = $client->__getLastResponse();
+        } catch (\SoapFault $e) {
+            $this->exception = $e;
+        }
     }
 
     /**
@@ -103,6 +115,19 @@ trait SoapManager
     protected function extractResponseProperty($property)
     {
         return static::arrayValue(static::objectToArray($this->response), explode('][', $property));
+    }
+
+    /**
+     * @return null|\SoapFault
+     */
+    protected function getException()
+    {
+        // When this method was called, this means thrown exception was read and won't be available anymore.
+        $exception = $this->exception;
+        // Reset the exception.
+        $this->exception = null;
+
+        return $exception;
     }
 
     /**

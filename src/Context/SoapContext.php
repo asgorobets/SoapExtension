@@ -5,9 +5,14 @@
 namespace Behat\SoapExtension\Context;
 
 use Symfony\Component\Yaml\Yaml;
+use PHPUnit_Framework_Assert as Assertions;
+// Argument processors.
 use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
-use PHPUnit_Framework_Assert as Assertions;
+// Utils.
+use Behat\SoapExtension\Utils\SoapFaultProcessor;
+// Scopes.
+use Behat\Behat\Hook\Scope\BeforeStepScope;
 
 /**
  * Class SoapContext.
@@ -24,6 +29,7 @@ class SoapContext extends RawSoapContext
      * @var mixed
      */
     private $value;
+    private $fault;
 
     /**
      * Sets the WSDL for the next SOAP request.
@@ -99,6 +105,22 @@ class SoapContext extends RawSoapContext
         foreach ($namespaces->getRowsHash() as $prefix => $uri) {
             $this->setNamespace($prefix, $uri);
         }
+    }
+
+    /**
+     * @Then /^(?:|I )expect SOAP exception(?:| with code "(\d+)")(?:|( and| or)? with message "([^"]+?)")$/
+     */
+    public function expectException($code = null, $condition = null, $message = null)
+    {
+        // Exit with an error because we're expected an exception and got nothing.
+        if (null === $this->fault) {
+            throw new \RuntimeException('Expected \SoapFault exception was not thrown!');
+        }
+
+        new SoapFaultProcessor($this->fault, $code, $message, $condition);
+
+        // If processor didn't throw an exception, then we shouldn't too.
+        $this->fault = null;
     }
 
     /**
@@ -214,5 +236,19 @@ class SoapContext extends RawSoapContext
     public function savedValueNotMatchesRegExp($pattern)
     {
         Assertions::assertNotRegExp($pattern, $this->value);
+    }
+
+    /**
+     * @BeforeStep
+     */
+    public function beforeStepCheckForException(BeforeStepScope $scope)
+    {
+        // Check for SOAP exception from previously executed step.
+        $this->fault = $this->getException();
+
+        // @todo Is it really a better way to do this?
+        if (null !== $this->fault && strpos($scope->getStep()->getText(), 'SOAP exception') === false) {
+            throw $this->fault;
+        }
     }
 }

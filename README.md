@@ -36,6 +36,7 @@ SoapExtension is a Behat extension designed to test various SOAP APIs using Beha
 
 ```shell
 ./vendor/bin/phpunit
+cd tests/ && ../vendor/bin/behat
 ```
 
 ## Contributions
