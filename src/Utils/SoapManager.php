@@ -195,14 +195,16 @@ trait SoapManager
     /**
      * @return mixed
      */
-    public function getResponse() {
+    public function getResponse()
+    {
         return $this->response;
     }
 
     /**
      * @return string
      */
-    public function getRawResponse() {
+    public function getRawResponse()
+    {
         return $this->rawResponse;
     }
 }
