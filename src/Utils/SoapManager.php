@@ -166,7 +166,7 @@ trait SoapManager
      */
     protected function setOption($option, $value)
     {
-        $this->options[$option] = defined($value) ? constant($value) : $value;
+        $this->options[$option] = is_string($value) && defined($value) ? constant($value) : $value;
     }
 
     /**
