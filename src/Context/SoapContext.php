@@ -119,7 +119,7 @@ class SoapContext extends RawSoapContext
     }
 
     /**
-     * @Then /^(?:|I )expect SOAP exception(?:| with code "(\d+)")(?:|( and| or)? with message "([^"]+?)")$/
+     * @Then /^(?:|I )expect SOAP exception(?:| with code "(\d+)")(?:|( and| or)? with message "(.+?)")$/
      */
     public function expectException($code = null, $condition = null, $message = null)
     {
