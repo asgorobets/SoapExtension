@@ -60,7 +60,7 @@ trait SoapManager
      * @param array $arguments
      *   Arguments array to pass to soap call function.
      */
-    protected function sendRequest($function, array $arguments)
+    public function sendRequest($function, array $arguments)
     {
         // These values can be easily overridden inside of configuration file.
         $this->options += [
@@ -190,5 +190,19 @@ trait SoapManager
     protected function setNamespace($prefix, $uri)
     {
         $this->namespaces[$prefix] = $uri;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResponse() {
+        return $this->response;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRawResponse() {
+        return $this->rawResponse;
     }
 }
