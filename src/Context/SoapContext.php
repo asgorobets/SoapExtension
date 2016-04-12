@@ -83,6 +83,16 @@ class SoapContext extends RawSoapContext
     {
         $this->sendRequest($function, [$params->getRowsHash()]);
     }
+    
+    /**
+     * Send SOAP request with params as nested array.
+     *
+     * @Given I call SOAP function :function with params as json:
+     */
+    public function iSendRequestWithNestedParamsArray($function, PyStringNode $json)
+    {
+        $this->sendRequest($function, [json_decode('{' . $json . '}', 'true')]);
+    }
 
     /**
      * Send SOAP request with raw body.
