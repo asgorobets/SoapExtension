@@ -98,6 +98,17 @@ class SoapContext extends RawSoapContext
     }
 
     /**
+     * Send SOAP request with function arguments array as YAML.
+     *
+     * @Given I call SOAP function :function with arguments array as YAML:
+     */
+    public function iSendRequestYAML($function, PyStringNode $arguments)
+    {
+        $arguments = Yaml::parse($arguments->getRaw());
+        $this->sendRequest($function, $arguments);
+    }
+
+    /**
      * @Given I register the following XPATH namespaces:
      */
     public function iRegisterXpathNamespaces(TableNode $namespaces)
