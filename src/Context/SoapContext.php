@@ -119,6 +119,17 @@ class SoapContext extends RawSoapContext
     }
 
     /**
+     * @Given /^I expect no SOAP exception$/
+     */
+    public function expectNoException()
+    {
+        // Exit with an error because we're not expecting an exception and got one.
+        if (null !== $this->fault) {
+            throw new \RuntimeException('Unexpected \SoapFault exception was thrown!');
+        }
+    }
+
+    /**
      * @Then /^(?:|I )expect SOAP exception(?:| with code "(\d+)")(?:|( and| or)? with message "(.+?)")$/
      */
     public function expectException($code = null, $condition = null, $message = null)
