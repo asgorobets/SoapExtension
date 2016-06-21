@@ -273,4 +273,18 @@ class SoapContext extends RawSoapContext
             throw $this->fault;
         }
     }
+
+    /**
+     * @Given I register the following SOAP headers:
+     */
+    public function iRegisterHeaders(TableNode $headers)
+    {
+        $soapHeaders = array();
+
+        foreach ($headers->getColumnsHash() as $header) {
+            $soapHeaders[] = new \SoapHeader($header['namespace'], $header['key'], $header['value']);
+        }
+
+        $this->setHeaders($soapHeaders);
+    }
 }

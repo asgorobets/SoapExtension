@@ -51,6 +51,13 @@ trait SoapManager
     private $exception;
 
     /**
+     * Set of headers for SOAP request.
+     *
+     * @var array
+     */
+    private $headers = [];
+
+    /**
      * Make SOAP call to a function with params.
      *
      * @link http://php.net/manual/en/soapclient.getlastrequest.php#example-5896
@@ -73,6 +80,9 @@ trait SoapManager
         try {
             $client = new \SoapClient($this->wsdl, $this->options);
 
+            if ($this->headers) {
+                $client->__setSoapHeaders($this->headers);
+            }
             $this->response = $client->__soapCall($function, $arguments);
             $this->rawResponse = $client->__getLastResponse();
         } catch (\SoapFault $e) {
@@ -157,6 +167,17 @@ trait SoapManager
             foreach ($options as $option => $value) {
                 $this->setOption($option, $value);
             }
+        }
+    }
+    /**
+    * @param array $headers
+    */
+    protected function setHeaders(array $headers = null)
+    {
+        if (null === $headers) {
+            $this->headers = [];
+        } else {
+            $this->headers = $headers;
         }
     }
 
