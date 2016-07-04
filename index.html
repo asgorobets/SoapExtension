@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Behat SoapExtension by asgorobets</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Behat SoapExtension</h1>
+      <h2 class="project-tagline">Behat extension for testing SOAP webservices</h2>
+      <a href="https://github.com/asgorobets/SoapExtension" class="btn">View on GitHub</a>
+      <a href="https://github.com/asgorobets/SoapExtension/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/asgorobets/SoapExtension/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="behat-soapextension" class="anchor" href="#behat-soapextension" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Behat SoapExtension</h1>
+
+<p>SoapExtension is a Behat extension designed to test various SOAP APIs using Behat framework and it's powerful tooling. Soap Extension currently supports only PHP's native SoapClient as transport and there are no plans to add other clients support at this time. Full project roadmap will come later.</p>
+
+<p><a href="https://packagist.org/packages/behat/soap-extension"><img src="https://poser.pugx.org/behat/soap-extension/v/stable" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/behat/soap-extension"><img src="https://poser.pugx.org/behat/soap-extension/license" alt="License"></a>
+<a href="https://travis-ci.org/asgorobets/SoapExtension"><img src="https://img.shields.io/travis/asgorobets/SoapExtension/master.svg?style=flat" alt="Build Status"></a>
+<a href="https://scrutinizer-ci.com/g/asgorobets/SoapExtension/code-structure"><img src="https://img.shields.io/scrutinizer/coverage/g/asgorobets/SoapExtension.svg?style=flat" alt="Coverage Status"></a>
+<a href="https://scrutinizer-ci.com/g/asgorobets/SoapExtension"><img src="https://img.shields.io/scrutinizer/g/asgorobets/SoapExtension.svg?style=flat" alt="Quality Score"></a>
+<a href="https://packagist.org/packages/behat/soap-extension"><img src="https://poser.pugx.org/behat/soap-extension/downloads" alt="Total Downloads"></a></p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
+
+<ul>
+<li><code>curl -sS https://getcomposer.org/installer | php</code></li>
+<li><code>vim composer.json</code></li>
+</ul>
+
+<div class="highlight highlight-source-json"><pre>{
+  <span class="pl-s"><span class="pl-pds">"</span>require<span class="pl-pds">"</span></span>: {
+    <span class="pl-s"><span class="pl-pds">"</span>behat/soap-extension<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>dev-master<span class="pl-pds">"</span></span>
+  },
+  <span class="pl-s"><span class="pl-pds">"</span>config<span class="pl-pds">"</span></span>: {
+    <span class="pl-s"><span class="pl-pds">"</span>bin-dir<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>bin<span class="pl-pds">"</span></span>
+  }
+}</pre></div>
+
+<ul>
+<li><code>composer install</code></li>
+<li>Enable <code>SoapExtension</code> in <a href="docs/behat.yml#L6-L10">behat.yml</a>
+</li>
+</ul>
+
+<h2>
+<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Documentation</h2>
+
+<ul>
+<li><a href="docs/features/weather_ws.feature">Example feature</a></li>
+</ul>
+
+<p><a href="docs/">Docs coming soon...</a> In the meantime, run <code>bin/behat -dl</code> for a list of available steps.</p>
+
+<h2>
+<a id="testing" class="anchor" href="#testing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing</h2>
+
+<div class="highlight highlight-source-shell"><pre>./vendor/bin/phpunit
+<span class="pl-c1">cd</span> tests/ <span class="pl-k">&amp;&amp;</span> ../vendor/bin/behat</pre></div>
+
+<h2>
+<a id="contributions" class="anchor" href="#contributions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributions</h2>
+
+<p>Feel free to provide feedback in issue queue and contributions are much welcome.</p>
+
+<h2>
+<a id="authors" class="anchor" href="#authors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors</h2>
+
+<ul>
+<li><a href="https://github.com/asgorobets">Alexei Gorobets (asgorobets)</a></li>
+<li><a href="https://github.com/BR0kEN-">Sergii Bondarenko (BR0kEN-)</a></li>
+</ul>
+
+<h2>
+<a id="supporting-organizations" class="anchor" href="#supporting-organizations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Supporting organizations</h2>
+
+<p>Thanks to <a href="http://www.ffwagency.com/">FFW Agency</a> for supporting this contribution.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/asgorobets/SoapExtension">Behat SoapExtension</a> is maintained by <a href="https://github.com/asgorobets">asgorobets</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
