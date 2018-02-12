@@ -4,11 +4,12 @@
  */
 namespace Behat\SoapExtension\ServiceContainer;
 
-use Behat\EnvironmentLoader;
 use Behat\Testwork\ServiceContainer\Extension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
+use Behat\Behat\Context\ServiceContainer\ContextExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * Class SoapExtension.
@@ -17,6 +18,8 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
  */
 class SoapExtension implements Extension
 {
+    const SOAP_ID = 'soap.extension';
+
     /**
      * {@inheritdoc}
      */
@@ -37,8 +40,7 @@ class SoapExtension implements Extension
      */
     public function load(ContainerBuilder $container, array $config)
     {
-        $loader = new EnvironmentLoader($this, $container, $config);
-        $loader->load();
+        $this->loadContextInitializer($container, $config);
     }
 
     /**
@@ -63,5 +65,18 @@ class SoapExtension implements Extension
         }
 
         $config->end();
+    }
+
+    /**
+     * Loads context initializer into given Container.
+     *
+     * @param ContainerBuilder $container
+     * @param array $config
+     */
+    private function loadContextInitializer(ContainerBuilder $container, $config)
+    {
+        $definition = new Definition('Behat\SoapExtension\Context\SoapContextInitializer', array($config));
+        $definition->addTag(ContextExtension::INITIALIZER_TAG);
+        $container->setDefinition('soap.context_initializer', $definition);
     }
 }
