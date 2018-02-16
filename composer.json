@@ -25,5 +25,10 @@
     "psr-4": {
       "Behat\\SoapExtension\\": "src/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Behat\\SoapExtension\\Context\\Bootstrap\\": "tests/bootstrap/"
+    }
   }
 }
