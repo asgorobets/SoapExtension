@@ -1,7 +1,15 @@
 default:
+  autoload:
+    'YourCompanyName\CustomFeatureContexts\Bootstrap': %paths.base%/docs/bootstrap
   suites:
     default:
       contexts: {}
+    custom:
+      contexts:
+        - YourCompanyName\CustomFeatureContexts\Bootstrap\ExtendedSoapContext:
+            args:
+              a: "Mountain View"
+              b: "Sunnyvale"
   extensions:
     Behat\SoapExtension:
       # An associative array as second argument for \SoapClient::__soapCall().
